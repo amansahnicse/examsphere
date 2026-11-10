@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* =========================================
+   EXAMSPHERE - GLOBAL DESIGN SYSTEM
+========================================= */
+
+:root {
+  /* Typography */
+  font-family: "DM Sans", sans-serif;
+  color: #172033;
+  background: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Brand Colors */
+  --primary: #2457d6;
+  --primary-dark: #1946b8;
+  --primary-light: #edf3ff;
+
+  /* Text Colors */
+  --text-primary: #172033;
+  --text-secondary: #596579;
+  --text-muted: #8791a2;
+
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f9fc;
+  --bg-soft: #f1f4f9;
+
+  /* Border & Status Colors */
+  --border: #e5e9f0;
+  --success: #16845b;
+  --success-light: #e9f7f0;
+  --warning: #b7791f;
+  --warning-light: #fff7e6;
+  --danger: #dc3545;
+  --danger-light: #fff0f1;
+
+  /* Typography Scale */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-lg: 1.125rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 1.875rem;
+  --font-4xl: 2.25rem;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Layout */
+  --container-width: 1200px;
+  --sidebar-width: 255px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(23, 32, 51, 0.04);
+  --shadow-md: 0 6px 20px rgba(23, 32, 51, 0.07);
+  --shadow-lg: 0 12px 32px rgba(23, 32, 51, 0.10);
+}
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "DM Sans", sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.6;
+}
+
+/* =========================================
+   TYPOGRAPHY
+========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Manrope", sans-serif;
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+}
+
+h2 {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+small {
+  font-size: var(--font-sm);
+}
+
+/* =========================================
+   COMMON ELEMENTS
+========================================= */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul,
+ol {
+  list-style-position: inside;
+}
+
+/* =========================================
+   COMMON LAYOUT
+========================================= */
+
+.container {
+  width: min(100% - 40px, var(--container-width));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--space-16);
+}
+
+.section-heading {
+  margin-bottom: var(--space-8);
+}
+
+.section-heading p {
+  margin-top: var(--space-2);
+  max-width: 650px;
+}
+
+/* =========================================
+   FORM ELEMENTS
+========================================= */
+
+input,
+textarea,
+select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(36, 87, 214, 0.10);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+:focus-visible {
+  outline: 3px solid rgba(36, 87, 214, 0.35);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #dce7ff;
+  color: #173b78;
+}
+
+/* =========================================
+   RESPONSIVE DEFAULTS
+========================================= */
+
+@media (max-width: 768px) {
+  .container {
+    width: min(100% - 32px, var(--container-width));
+  }
+
+  .section {
+    padding-block: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9375rem;
+  }
+
+  .container {
+    width: min(100% - 28px, var(--container-width));
+  }
+
+  .section {
+    padding-block: 40px;
+  }
+}

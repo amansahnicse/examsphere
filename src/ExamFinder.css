@@ -1,0 +1,431 @@
+.exam-finder-page {
+  min-height: 100vh;
+  padding: 30px;
+  background: #f7f8fc;
+  color: #172033;
+}
+
+.finder-hero {
+  min-height: 240px;
+  padding: 38px 45px;
+  border-radius: 20px;
+  background: linear-gradient(115deg, #202b50, #414c83);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.finder-eyebrow,
+.finder-overline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.finder-eyebrow {
+  color: #c0ccff;
+}
+
+.finder-hero h1 {
+  margin: 18px 0 10px;
+  font-size: clamp(30px, 4vw, 43px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.finder-hero h1 span {
+  color: #aebcff;
+}
+
+.finder-hero p {
+  max-width: 540px;
+  color: #d4dbf0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.finder-hero-icon {
+  width: 155px;
+  height: 155px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  display: grid;
+  place-items: center;
+  color: #d6ddff;
+  margin-right: 35px;
+}
+
+.finder-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(240px, .8fr);
+  gap: 22px;
+  margin-top: 28px;
+  align-items: start;
+}
+
+.finder-form-card,
+.finder-info-card {
+  background: white;
+  border: 1px solid #e9ebf2;
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.finder-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #edf0f5;
+  margin-bottom: 23px;
+}
+
+.finder-heading-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #efefff;
+  color: #5b5ab6;
+  display: grid;
+  place-items: center;
+}
+
+.finder-card-heading h2 {
+  margin: 0 0 5px;
+  font-size: 19px;
+}
+
+.finder-card-heading p {
+  margin: 0;
+  font-size: 12px;
+  color: #8991a3;
+}
+
+.finder-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 21px;
+}
+
+.finder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.finder-field label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #48536b;
+}
+
+.finder-field label svg {
+  color: #7774c7;
+}
+
+.finder-field input,
+.finder-field select {
+  width: 100%;
+  height: 45px;
+  padding: 0 12px;
+  border: 1px solid #e5e8ef;
+  border-radius: 8px;
+  background: #fff;
+  color: #354057;
+  font-size: 12px;
+  outline: none;
+}
+
+.finder-field input:focus,
+.finder-field select:focus {
+  border-color: #7774c7;
+  box-shadow: 0 0 0 3px rgba(119,116,199,.1);
+}
+
+.finder-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 27px;
+  padding-top: 20px;
+  border-top: 1px solid #edf0f5;
+}
+
+.finder-reset,
+.finder-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.finder-reset {
+  background: white;
+  border: 1px solid #e4e6ee;
+  color: #68738a;
+}
+
+.finder-submit {
+  background: #5154a8;
+  border: 1px solid #5154a8;
+  color: white;
+}
+
+.finder-submit:hover {
+  background: #41458e;
+}
+
+.finder-error {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff0f0;
+  color: #c04c4c;
+  font-size: 12px;
+}
+
+.finder-info-card {
+  padding: 25px 21px;
+}
+
+.finder-info-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 11px;
+  background: #f0efff;
+  color: #6260bb;
+  display: grid;
+  place-items: center;
+}
+
+.finder-info-card h3 {
+  margin: 18px 0 23px;
+  font-size: 17px;
+}
+
+.finder-info-step {
+  display: flex;
+  gap: 13px;
+  margin-bottom: 22px;
+}
+
+.finder-info-step > span {
+  min-width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #f0efff;
+  color: #625fb8;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.finder-info-step strong {
+  display: block;
+  font-size: 12px;
+  margin: 2px 0 6px;
+}
+
+.finder-info-step p {
+  margin: 0;
+  color: #8b93a4;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.finder-disclaimer {
+  padding: 13px;
+  border-radius: 9px;
+  background: #fff8e9;
+  color: #997333;
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.finder-results {
+  margin-top: 35px;
+}
+
+.finder-results-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.finder-overline {
+  color: #7771c9;
+}
+
+.finder-results-heading h2 {
+  margin: 8px 0;
+  font-size: 23px;
+}
+
+.finder-results-heading p {
+  color: #8991a3;
+  font-size: 12px;
+}
+
+.finder-results-heading button {
+  border: 1px solid #e5e7ef;
+  background: white;
+  color: #555c85;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.finder-result-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.finder-result-card {
+  padding: 21px;
+  border: 1px solid #e9ebf2;
+  background: white;
+  border-radius: 13px;
+}
+
+.finder-result-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.finder-result-icon {
+  width: 43px;
+  height: 43px;
+  border-radius: 11px;
+  background: #efefff;
+  color: #5c5ab6;
+  display: grid;
+  place-items: center;
+}
+
+.verification-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #a47732;
+  background: #fff6e5;
+  padding: 7px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.finder-result-card h3 {
+  margin: 17px 0 8px;
+  font-size: 16px;
+}
+
+.finder-result-card > p {
+  color: #828b9d;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.finder-result-qualification {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 0;
+  border-top: 1px solid #eff0f5;
+  color: #59658a;
+  font-size: 11px;
+}
+
+.finder-result-note {
+  padding: 11px;
+  background: #f7f8fc;
+  color: #777f91;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.finder-no-results {
+  padding: 45px 20px;
+  background: white;
+  border: 1px solid #e9ebf2;
+  border-radius: 13px;
+  text-align: center;
+  color: #7c8498;
+}
+
+.finder-no-results h3 {
+  color: #26314a;
+}
+
+.finder-no-results p {
+  font-size: 12px;
+}
+
+@media (max-width: 950px) {
+  .finder-content {
+    grid-template-columns: 1fr;
+  }
+
+  .finder-info-card {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .exam-finder-page {
+    padding: 18px;
+  }
+
+  .finder-hero {
+    padding: 28px 22px;
+  }
+
+  .finder-hero-icon {
+    display: none;
+  }
+
+  .finder-form-card {
+    padding: 19px;
+  }
+
+  .finder-form-grid,
+  .finder-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .finder-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .finder-form-actions button {
+    width: 100%;
+  }
+
+  .finder-results-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
