@@ -211,23 +211,13 @@ function Navbar() {
           </Link>
         ))}
 
-        <div className="mobile-actions">
-          <Link
-            to="/login"
-            className="login-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            Log in
-          </Link>
-
-          <Link
-            to="/signup"
-            className="button button-primary"
-            onClick={() => setMenuOpen(false)}
-          >
-            Get Started
-          </Link>
-        </div>
+        <Link
+  to="/login"
+  className="button button-outline button-large hero-mobile-login"
+>
+  Sign In
+  <ArrowRight size={18} />
+</Link>
       </nav>
 
       <div className="nav-actions">
@@ -988,44 +978,293 @@ function AuthPage({ mode = "login" }) {
   const [notice, setNotice] = useState("");
   const [noticeType, setNoticeType] = useState("info");
 
-  function showMessage(message, type = "info") {
-    setNotice(message);
-    setNoticeType(type);
+ function showMessage(message, type = "info") {
+  setNotice(message);
+  setNoticeType(type);
+}
+
+function getFirebaseError(error) {
+  const messages = {
+    "auth/email-already-in-use":
+      "Ye email already registered hai. Please login karo.",
+
+    "auth/invalid-email":
+      "Please valid email address enter karo.",
+
+    "auth/weak-password":
+      "Password weak hai. Strong password use karo.",
+
+    "auth/user-not-found":
+      "Is email se koi account nahi mila.",
+
+    "auth/wrong-password":
+      "Password incorrect hai. Dobara try karo.",
+
+    "auth/invalid-credential":
+      "Email ya password incorrect hai.",
+
+    "auth/popup-closed-by-user":
+      "Google Sign-in cancel ho gaya.",
+
+    "auth/popup-blocked":
+      "Browser ne Google popup block kar diya. Popup allow karo.",
+
+    "auth/network-request-failed":
+      "Internet connection check karo.",
+
+    "auth/too-many-requests":
+      "Bahut attempts ho chuke hain. Thodi der baad try karo.",
+
+    "auth/operation-not-allowed":
+      "Firebase Console mein ye sign-in method enable nahi hai."
+  };
+
+  return messages[error.code] ||
+    error.message ||
+    "Something went wrong. Please try again.";
+}
+
+
+// CREATE USER PROFILE IN FIRESTORE
+
+async function createUserProfile(user, userRole, name, phone) {
+  const userRef = doc(db, "users", user.uid);
+
+  const userSnapshot = await getDoc(userRef);
+
+  // Existing profile ko overwrite nahi karna
+  if (userSnapshot.exists()) {
+    return userSnapshot.data();
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    setNotice("");
+  const profile = {
+    uid: user.uid,
+    displayName: name || user.displayName || "",
+    email: user.email || "",
+    mobile: phone || "",
+    role: userRole,
+    createdAt: serverTimestamp(),
+    selectedExams: [],
+    savedExams: [],
+    studyPreferences: {},
+    dashboardData: {}
+  };
+
+  await setDoc(userRef, profile);
+
+  return profile;
+}
+
+
+// EMAIL SIGNUP AND LOGIN
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  setNotice("");
+
+  try {
+
+    // FORGOT PASSWORD
 
     if (isForgot) {
-      showMessage(
-        "Authentication is not connected yet. Please try again later.",
-  "info"
+      if (!email.trim()) {
+        showMessage("Please enter your email address.", "error");
+        return;
+      }
+
+      await sendPasswordResetEmail(
+        auth,
+        email.trim().toLowerCase()
       );
+
+      showMessage(
+        "Password reset link aapke email par bhej diya gaya hai.",
+        "success"
+      );
+
       return;
     }
 
-    if (isSignup && password !== confirmPassword) {
-      showMessage(
-        "Password aur Confirm Password match nahi kar rahe.",
-        "error"
+
+    // SIGNUP VALIDATION
+
+    if (isSignup) {
+
+      if (password !== confirmPassword) {
+        showMessage(
+          "Password aur Confirm Password match nahi kar rahe.",
+          "error"
+        );
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage(
+          "Password minimum 8 characters ka hona chahiye.",
+          "error"
+        );
+        return;
+      }
+
+      await setPersistence(auth, browserLocalPersistence);
+
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email.trim().toLowerCase(),
+          password
+        );
+
+      const user = userCredential.user;
+
+      await updateProfile(user, {
+        displayName: fullName.trim()
+      });
+
+      await createUserProfile(
+        user,
+        role,
+        fullName.trim(),
+        mobile
       );
+
+      showMessage(
+        "Account successfully create ho gaya! Welcome to ExamSphere.",
+        "success"
+      );
+
+      const destination =
+        params.get("next") ||
+        (role === "teacher"
+          ? "/teachers/dashboard"
+          : "/students");
+
+      navigate(destination, { replace: true });
+
       return;
     }
 
+
+    // EMAIL LOGIN
+
+    await setPersistence(
+      auth,
+      rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence
+    );
+
+    const userCredential =
+      await signInWithEmailAndPassword(
+        auth,
+        email.trim().toLowerCase(),
+        password
+      );
+
+    const user = userCredential.user;
+
+    const userRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userRef);
+
+    let userRole = "student";
+
+    if (userSnapshot.exists()) {
+      userRole = userSnapshot.data().role || "student";
+    } else {
+      // Profile missing ho toh default student profile create hoga
+      await createUserProfile(
+        user,
+        "student",
+        user.displayName || "",
+        ""
+      );
+    }
+
+    const destination =
+      params.get("next") ||
+      (userRole === "teacher"
+        ? "/teachers/dashboard"
+        : "/students");
+
+    navigate(destination, { replace: true });
+
+  } catch (error) {
+
+    console.error("Authentication Error:", error);
+
     showMessage(
-      "Authentication backend abhi connect nahi hua hai. Secure login aur account creation next development step mein implement hoga.",
-      "info"
+      getFirebaseError(error),
+      "error"
     );
   }
+}
 
-  function handleGoogleLogin() {
+
+// GOOGLE SIGN-IN
+
+async function handleGoogleLogin() {
+
+  setNotice("");
+
+  try {
+
+    await setPersistence(
+      auth,
+      rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence
+    );
+
+    const result = await signInWithPopup(
+      auth,
+      googleProvider
+    );
+
+    const user = result.user;
+
+    const userRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userRef);
+
+    let userRole;
+
+    if (userSnapshot.exists()) {
+
+      // Existing user ka role preserve rahega
+      userRole = userSnapshot.data().role || "student";
+
+    } else {
+
+      // New Google user
+      userRole = selectedRole === "teacher"
+        ? "teacher"
+        : "student";
+
+      await createUserProfile(
+        user,
+        userRole,
+        user.displayName || "",
+        ""
+      );
+    }
+
+    const destination =
+      params.get("next") ||
+      (userRole === "teacher"
+        ? "/teachers/dashboard"
+        : "/students");
+
+    navigate(destination, { replace: true });
+
+  } catch (error) {
+
+    console.error("Google Authentication Error:", error);
+
     showMessage(
-      "Google Sign-in interface ready hai. Actual Google authentication ke liye OAuth configuration aur backend integration required hai.",
-      "info"
+      getFirebaseError(error),
+      "error"
     );
   }
-
+}
   const pageTitle = isForgot
     ? "Reset your password"
     : isSignup
