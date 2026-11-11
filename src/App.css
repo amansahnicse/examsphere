@@ -1297,16 +1297,32 @@
     font-size: 13px;
   }
 
-  .nav-actions {
-    display: none;
-  }
+ /* Mobile Login and Sign Up buttons */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
 
-  .mobile-actions {
-    display: flex;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    justify-content: space-between;
-  }
+.nav-actions .login-link {
+  display: inline-flex;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.nav-actions .nav-cta {
+  display: inline-flex;
+  min-height: 35px;
+  padding: 0 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.mobile-actions {
+  display: none;
+}
 
   .hero {
     padding: 54px 21px 45px;
@@ -1460,6 +1476,37 @@
 
   .hero-visual-new {
     min-height: 650px;
+  }
+    .navbar {
+    padding: 0 10px;
+    gap: 6px;
+  }
+
+  .brand {
+    order: 0;
+    font-size: 16px;
+  }
+
+  .nav-actions {
+    order: 1;
+    gap: 5px;
+  }
+
+  .nav-actions .login-link {
+    font-size: 11px;
+  }
+
+  .nav-actions .nav-cta {
+    padding: 0 7px;
+    font-size: 10px;
+  }
+
+  .mobile-menu {
+    order: 2;
+  }
+
+  .hero-mobile-login {
+    display: none;
   }
 }
 
