@@ -2187,3 +2187,260 @@
   text-align: center;
   font-weight: 400;
 }
+/* =========================================
+   EXAMSPHERE RESPONSIVE HERO FIX
+   Mobile and Tablet Only
+========================================= */
+
+/* Tablets and mobile devices */
+@media (max-width: 768px) {
+
+  .hero-redesign {
+    padding: 42px 22px 35px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .hero-redesign .hero-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .hero-redesign h1 {
+    font-size: clamp(36px, 8vw, 48px);
+    line-height: 1.12;
+    letter-spacing: -1.8px;
+    overflow-wrap: break-word;
+  }
+
+  .hero-redesign .hero-description {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .hero-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero-buttons .button {
+    min-height: 54px;
+  }
+
+  .hero-benefits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 12px 18px;
+  }
+
+  .hero-benefits span {
+    font-size: 11px;
+  }
+
+  /* Preview container */
+  .hero-visual-new {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    padding: 12px 0 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dashboard-preview-new {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    min-width: 0;
+    padding: 18px;
+    border-radius: 18px;
+    transform: none;
+  }
+
+  .dashboard-preview-new .preview-top h3 {
+    font-size: 19px;
+  }
+
+  .preview-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .preview-feature {
+    min-width: 0;
+    min-height: 66px;
+    padding: 9px;
+    gap: 8px;
+  }
+
+  .preview-feature-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .preview-feature-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .preview-feature strong {
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .preview-feature span {
+    font-size: 8px;
+    line-height: 1.4;
+  }
+
+  /* Floating feature labels */
+  .floating-note {
+    position: absolute;
+    z-index: 3;
+    width: max-content;
+    max-width: 75%;
+    padding: 9px 12px;
+    gap: 7px;
+    border-radius: 10px;
+    font-size: 10px;
+    box-shadow: 0 6px 20px rgba(28, 54, 105, 0.12);
+  }
+
+  .floating-note svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .floating-note-top {
+    top: 0;
+    right: 5px;
+    left: auto;
+    bottom: auto;
+  }
+
+  .floating-note-bottom {
+    bottom: 0;
+    left: 5px;
+    right: auto;
+  }
+
+  .stats-strip {
+    width: calc(100% - 36px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 12px;
+  }
+}
+
+
+/* Small mobile devices */
+@media (max-width: 380px) {
+
+  .hero-redesign {
+    padding: 32px 18px 28px;
+    gap: 24px;
+  }
+
+  .hero-redesign h1 {
+    font-size: 36px;
+    letter-spacing: -1.5px;
+  }
+
+  .hero-redesign .hero-description {
+    font-size: 14px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-buttons .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-benefits {
+    gap: 10px 13px;
+  }
+
+  .hero-benefits span {
+    font-size: 10px;
+  }
+
+  .dashboard-preview-new {
+    padding: 14px;
+  }
+
+  .preview-feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .preview-feature {
+    padding: 7px;
+    min-height: 62px;
+  }
+
+  .preview-feature-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .preview-feature strong {
+    font-size: 9px;
+  }
+
+  .preview-feature span {
+    font-size: 7px;
+  }
+
+  .floating-note {
+    font-size: 9px;
+    padding: 8px 10px;
+  }
+}
+
+
+/* Tablet landscape and small laptop */
+@media (min-width: 769px) and (max-width: 1100px) {
+
+  .hero-redesign {
+    gap: 30px;
+  }
+
+  .hero-redesign h1 {
+    font-size: clamp(38px, 4.5vw, 52px);
+  }
+
+  .dashboard-preview-new {
+    padding: 18px;
+  }
+
+}
+/* =========================================
+   MOBILE HERO SIGN IN BUTTON
+========================================= */
+
+/* Hidden on desktop */
+.hero-mobile-login {
+  display: none;
+}
+
+/* Visible on mobile and tablet */
+@media (max-width: 768px) {
+  .hero-mobile-login {
+    display: inline-flex;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 380px) {
+  .hero-mobile-login {
+    width: 100%;
+  }
+}

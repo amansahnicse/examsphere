@@ -505,6 +505,13 @@ function Home() {
                 <Search size={17} />
               </Link>
             </div>
+            <Link
+  to="/login"
+  className="button button-outline button-large hero-mobile-login"
+>
+  Sign In
+  <ArrowRight size={18} />
+</Link>
 
             <div className="hero-benefits">
               <span>
