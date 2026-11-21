@@ -1,3 +1,4 @@
+import { AuthProvider, ProtectedRoute } from "./AuthContext";
 import TeacherDashboard from "./TeacherDashboard";
 import HomepageSections from "./HomepageSections";
 import StudentDashboard from "./StudentDashboard";
@@ -1235,10 +1236,9 @@ async function handleGoogleLogin() {
     } else {
 
       // New Google user
-      userRole = selectedRole === "teacher"
-        ? "teacher"
-        : "student";
-
+     userRole = role === "teacher"
+  ? "teacher"
+  : "student";
       await createUserProfile(
         user,
         userRole,
@@ -1718,9 +1718,12 @@ async function handleGoogleLogin() {
 /* =========================================
    PROTECTED DASHBOARD ROUTE
 ========================================= */
-
 function ProtectedDashboard() {
-  return <StudentDashboard />;
+  return (
+    <ProtectedRoute allowedRole="student">
+      <StudentDashboard />
+    </ProtectedRoute>
+  );
 }
 
 /* =========================================
@@ -1799,9 +1802,13 @@ function AppLayout() {
 
         {/* Teacher Dashboard */}
         <Route
-          path="/teachers/dashboard/*"
-          element={<TeacherDashboard />}
-        />
+  path="/teachers/dashboard/*"
+  element={
+    <ProtectedRoute allowedRole="teacher">
+      <TeacherDashboard />
+    </ProtectedRoute>
+  }
+/>
 
         {/* Login Page */}
         <Route
@@ -1848,5 +1855,9 @@ function AppLayout() {
 ========================================= */
 
 export default function App() {
-  return <AppLayout />;
+  return (
+    <AuthProvider>
+      <AppLayout />
+    </AuthProvider>
+  );
 }
