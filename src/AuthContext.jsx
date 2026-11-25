@@ -9,9 +9,8 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import {
   doc,
-  getDoc,
+  onSnapshot,
 } from "firebase/firestore";
-
 import { auth, db } from "./firebase";
 
 import {
@@ -30,42 +29,57 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      async (user) => {
-        setLoading(true);
+  let unsubscribeProfile = null;
 
-        try {
-          if (user) {
-            setCurrentUser(user);
+  const unsubscribeAuth = onAuthStateChanged(
+    auth,
+    (user) => {
+      if (unsubscribeProfile) {
+        unsubscribeProfile();
+        unsubscribeProfile = null;
+      }
 
-            const userRef = doc(db, "users", user.uid);
-            const userSnapshot = await getDoc(userRef);
+      setLoading(true);
 
-            if (userSnapshot.exists()) {
-              setUserProfile(userSnapshot.data());
-            } else {
-              setUserProfile(null);
-            }
+      if (!user) {
+        setCurrentUser(null);
+        setUserProfile(null);
+        setLoading(false);
+        return;
+      }
+
+      setCurrentUser(user);
+
+      const userRef = doc(db, "users", user.uid);
+
+      unsubscribeProfile = onSnapshot(
+        userRef,
+        (userSnapshot) => {
+          if (userSnapshot.exists()) {
+            setUserProfile(userSnapshot.data());
           } else {
-            setCurrentUser(null);
             setUserProfile(null);
           }
-        } catch (error) {
-          console.error(
-            "Authentication profile error:",
-            error
-          );
 
+          setLoading(false);
+        },
+        (error) => {
+          console.error("Authentication profile error:", error);
           setUserProfile(null);
-        } finally {
           setLoading(false);
         }
-      }
-    );
+      );
+    }
+  );
 
-    return () => unsubscribe();
-  }, []);
+  return () => {
+    unsubscribeAuth();
+
+    if (unsubscribeProfile) {
+      unsubscribeProfile();
+    }
+  };
+}, []);
 
   return (
     <AuthContext.Provider
@@ -137,7 +151,10 @@ export function ProtectedRoute({
   }
 
   // Firestore profile missing hai
-  if (!userProfile || !userProfile.role) {
+ if (
+  !userProfile ||
+  (!userProfile.role && !Array.isArray(userProfile.roles))
+) {
     return (
       <div style={{
         minHeight: "100vh",
@@ -159,20 +176,23 @@ export function ProtectedRoute({
     );
   }
 
-  // Wrong role ko correct dashboard par bhejna
-  if (userProfile.role !== allowedRole) {
-    const correctRoute =
-      userProfile.role === "teacher"
-        ? "/teachers/dashboard"
-        : "/students";
+  // Multiple roles support
+const userRoles = Array.isArray(userProfile.roles)
+  ? userProfile.roles
+  : [userProfile.role || "student"];
 
-    return (
-      <Navigate
-        to={correctRoute}
-        replace
-      />
-    );
-  }
+// Wrong role ko correct dashboard par bhejna
+if (!userRoles.includes(allowedRole)) {
+  const correctRoute = userRoles.includes("teacher")
+    ? "/teachers/dashboard"
+    : "/students";
 
+  return (
+    <Navigate
+      to={correctRoute}
+      replace
+    />
+  );
+}
   return children;
 }

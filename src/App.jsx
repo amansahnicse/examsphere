@@ -22,6 +22,8 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
+  arrayUnion,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -1044,6 +1046,7 @@ async function createUserProfile(user, userRole, name, phone) {
     email: user.email || "",
     mobile: phone || "",
     role: userRole,
+    roles: [userRole],
     createdAt: serverTimestamp(),
     selectedExams: [],
     savedExams: [],
@@ -1055,7 +1058,17 @@ async function createUserProfile(user, userRole, name, phone) {
 
   return profile;
 }
+// ADD ROLE TO EXISTING USER PROFILE
 
+async function addUserRole(user, selectedRole, existingProfile) {
+  const userRef = doc(db, "users", user.uid);
+
+  const existingRole = existingProfile.role || "student";
+
+  await updateDoc(userRef, {
+    roles: arrayUnion(existingRole, selectedRole),
+  });
+}
 
 // EMAIL SIGNUP AND LOGIN
 
@@ -1144,6 +1157,7 @@ async function handleSubmit(event) {
 
       return;
     }
+    
 
 
     // EMAIL LOGIN
@@ -1167,27 +1181,30 @@ async function handleSubmit(event) {
     const userRef = doc(db, "users", user.uid);
     const userSnapshot = await getDoc(userRef);
 
-    let userRole = "student";
+    const selectedRole = role === "teacher" ? "teacher" : "student";
 
-    if (userSnapshot.exists()) {
-      userRole = userSnapshot.data().role || "student";
-    } else {
-      // Profile missing ho toh default student profile create hoga
-      await createUserProfile(
-        user,
-        "student",
-        user.displayName || "",
-        ""
-      );
-    }
+if (userSnapshot.exists()) {
+  await addUserRole(
+    user,
+    selectedRole,
+    userSnapshot.data()
+  );
+} else {
+  await createUserProfile(
+    user,
+    selectedRole,
+    user.displayName || "",
+    ""
+  );
+}
 
-    const destination =
-      params.get("next") ||
-      (userRole === "teacher"
-        ? "/teachers/dashboard"
-        : "/students");
+const destination =
+  params.get("next") ||
+  (selectedRole === "teacher"
+    ? "/teachers/dashboard"
+    : "/students");
 
-    navigate(destination, { replace: true });
+navigate(destination, { replace: true });
 
   } catch (error) {
 
@@ -1226,34 +1243,30 @@ async function handleGoogleLogin() {
     const userRef = doc(db, "users", user.uid);
     const userSnapshot = await getDoc(userRef);
 
-    let userRole;
+   const selectedRole = role === "teacher" ? "teacher" : "student";
 
-    if (userSnapshot.exists()) {
+if (userSnapshot.exists()) {
+  await addUserRole(
+    user,
+    selectedRole,
+    userSnapshot.data()
+  );
+} else {
+  await createUserProfile(
+    user,
+    selectedRole,
+    user.displayName || "",
+    ""
+  );
+}
 
-      // Existing user ka role preserve rahega
-      userRole = userSnapshot.data().role || "student";
+const destination =
+  params.get("next") ||
+  (selectedRole === "teacher"
+    ? "/teachers/dashboard"
+    : "/students");
 
-    } else {
-
-      // New Google user
-     userRole = role === "teacher"
-  ? "teacher"
-  : "student";
-      await createUserProfile(
-        user,
-        userRole,
-        user.displayName || "",
-        ""
-      );
-    }
-
-    const destination =
-      params.get("next") ||
-      (userRole === "teacher"
-        ? "/teachers/dashboard"
-        : "/students");
-
-    navigate(destination, { replace: true });
+navigate(destination, { replace: true });
 
   } catch (error) {
 
@@ -1394,7 +1407,7 @@ async function handleGoogleLogin() {
 
               {/* ACCOUNT TYPE */}
 
-              {isSignup && (
+              {!isForgot && (
                 <div className="auth-field">
                   <label>Choose your account type</label>
 
