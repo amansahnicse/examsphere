@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase";
 import {
   LayoutDashboard,
   Users,
@@ -208,6 +211,7 @@ const moduleInformation = {
 };
 
 export default function TeacherDashboard() {
+  const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("Overview");
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -226,6 +230,21 @@ export default function TeacherDashboard() {
     setActiveMenu(moduleName);
     setMobileOpen(false);
   };
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+const handleLogout = () => {
+  setShowLogoutConfirm(true);
+};
+
+const confirmLogout = async () => {
+  try {
+    await signOut(auth);
+    navigate("/", { replace: true });
+  } catch (error) {
+    console.error("Logout error:", error);
+    alert("Unable to logout. Please try again.");
+  }
+};
 
   const activeInformation = moduleInformation[activeMenu];
 
@@ -310,7 +329,15 @@ export default function TeacherDashboard() {
               <span>Teacher Portal</span>
             </div>
 
-            <LogOut size={17} />
+         <button
+  type="button"
+  onClick={handleLogout}
+  className="teacher-logout-button"
+  title="Logout"
+  aria-label="Logout"
+>
+  <LogOut size={17} />
+</button>
           </div>
 
         </div>
@@ -623,7 +650,45 @@ export default function TeacherDashboard() {
 
         )}
 
-      </main>
+            </main>
+
+      {showLogoutConfirm && (
+        <div className="logout-modal-overlay">
+          <div className="logout-modal">
+
+            <div className="logout-modal-icon">
+              <LogOut size={22} />
+            </div>
+
+            <h3>Logout Confirmation</h3>
+
+            <p>
+              Are you sure you want to log out of your account?
+            </p>
+
+            <div className="logout-modal-actions">
+
+              <button
+                type="button"
+                className="logout-cancel-button"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="logout-confirm-button"
+                onClick={confirmLogout}
+              >
+                Yes, Logout
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -2,6 +2,9 @@ import PreparationRoadmap from "./PreparationRoadmap";
 import ExamFinder from "./ExamFinder";
 import ExploreExams from "./ExploreExams";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase";
 
 import {
   LayoutDashboard,
@@ -23,6 +26,7 @@ import {
   X,
   GraduationCap,
   CheckCircle2,
+  LogOut,
 } from "lucide-react";
 
 import "./StudentDashboard.css";
@@ -113,6 +117,7 @@ function Sidebar({
   setActiveMenu,
   mobileOpen,
   setMobileOpen,
+  onLogout,
 }) {
   return (
     <>
@@ -201,7 +206,14 @@ function Sidebar({
             <Settings size={19} />
             <span>Settings</span>
           </button>
-
+<button
+  className="sidebar-link"
+  onClick={onLogout}
+  type="button"
+>
+  <LogOut size={19} />
+  <span>Logout</span>
+</button>
           <div className="sidebar-profile">
             <div className="profile-avatar">A</div>
 
@@ -842,6 +854,8 @@ function TodayStudySummary({ setActiveMenu }) {
   );
 }
 function StudentDashboard() {
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -854,6 +868,20 @@ function StudentDashboard() {
       setMessage("");
     }, 3000);
   };
+  const handleLogout = () => {
+  setShowLogoutConfirm(true);
+};
+
+const confirmLogout = async () => {
+  try {
+    await signOut(auth);
+    navigate("/", { replace: true });
+  } catch (error) {
+    console.error("Logout error:", error);
+    showMessage("Unable to logout. Please try again.");
+    setShowLogoutConfirm(false);
+  }
+};
 
   // Hide dashboard search on pages that have their own search
   const showDashboardSearch =
@@ -862,12 +890,13 @@ function StudentDashboard() {
 
   return (
     <div className="student-dashboard">
-      <Sidebar
-        activeMenu={activeMenu}
-        setActiveMenu={setActiveMenu}
-        mobileOpen={mobileOpen}
-        setMobileOpen={setMobileOpen}
-      />
+  <Sidebar
+  activeMenu={activeMenu}
+  setActiveMenu={setActiveMenu}
+  mobileOpen={mobileOpen}
+  setMobileOpen={setMobileOpen}
+  onLogout={handleLogout}
+/>
 
       <main className="dashboard-main">
         <DashboardHeader
@@ -918,11 +947,45 @@ function StudentDashboard() {
       </main>
 
       {message && (
-        <div className="dashboard-toast">
-          <CheckCircle2 size={18} />
-          {message}
-        </div>
-      )}
+  <div className="dashboard-toast">
+    <CheckCircle2 size={18} />
+    {message}
+  </div>
+)}
+
+{showLogoutConfirm && (
+  <div className="logout-modal-overlay">
+    <div className="logout-modal">
+      <div className="logout-modal-icon">
+        <LogOut size={24} />
+      </div>
+
+      <h3>Logout Confirmation</h3>
+
+      <p>
+        Are you sure you want to log out of your ExamSphere account?
+      </p>
+
+      <div className="logout-modal-actions">
+        <button
+          type="button"
+          className="logout-cancel-button"
+          onClick={() => setShowLogoutConfirm(false)}
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          className="logout-confirm-button"
+          onClick={confirmLogout}
+        >
+          Yes, Logout
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
