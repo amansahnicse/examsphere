@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
-
+import { useAuth } from "./AuthContext";
 import {
   LayoutDashboard,
   Search,
@@ -118,6 +118,8 @@ function Sidebar({
   mobileOpen,
   setMobileOpen,
   onLogout,
+  studentName,
+  avatarLetter,
 }) {
   return (
     <>
@@ -214,16 +216,6 @@ function Sidebar({
   <LogOut size={19} />
   <span>Logout</span>
 </button>
-          <div className="sidebar-profile">
-            <div className="profile-avatar">A</div>
-
-            <div className="profile-info">
-              <strong>Aman Kumar</strong>
-              <span>Student Account</span>
-            </div>
-
-            <ChevronDown size={17} />
-          </div>
         </div>
       </aside>
     </>
@@ -286,7 +278,22 @@ function DashboardHeader({
 }
 
 // Welcome banner
-function WelcomeBanner({ setActiveMenu }) {
+// Welcome banner
+function WelcomeBanner({ setActiveMenu, firstName }) {
+  const hour = new Date().getHours();
+
+  let greeting;
+
+  if (hour >= 5 && hour < 12) {
+    greeting = "Good morning";
+  } else if (hour >= 12 && hour < 17) {
+    greeting = "Good afternoon";
+  } else if (hour >= 17 && hour < 21) {
+    greeting = "Good evening";
+  } else {
+    greeting = "Good night";
+  }
+
   return (
     <section className="welcome-banner">
       <div className="welcome-content">
@@ -294,7 +301,9 @@ function WelcomeBanner({ setActiveMenu }) {
           YOUR LEARNING JOURNEY
         </span>
 
-        <h1>Good morning, Aman! 👋</h1>
+        <h1>
+          {greeting}, {firstName}! 👋
+        </h1>
 
         <p>
           Every small step brings you closer to your goal.
@@ -854,10 +863,37 @@ function TodayStudySummary({ setActiveMenu }) {
   );
 }
 function StudentDashboard() {
+  const { currentUser, userProfile } = useAuth();
+  const studentName =
+  userProfile?.displayName ||
+  currentUser?.displayName ||
+  currentUser?.email?.split("@")[0] ||
+  "Student";
+
+const firstName = studentName.split(" ")[0];
+const avatarLetter = firstName.charAt(0).toUpperCase();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState("Dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => {
+  if (mobileOpen) {
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+  } else {
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  };
+}, [mobileOpen]);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [message, setMessage] = useState("");
 
@@ -896,6 +932,8 @@ const confirmLogout = async () => {
   mobileOpen={mobileOpen}
   setMobileOpen={setMobileOpen}
   onLogout={handleLogout}
+  studentName={studentName}
+avatarLetter={avatarLetter}
 />
 
       <main className="dashboard-main">
@@ -911,8 +949,9 @@ const confirmLogout = async () => {
           {activeMenu === "Dashboard" ? (
             <>
               <WelcomeBanner
-                setActiveMenu={setActiveMenu}
-              />
+  setActiveMenu={setActiveMenu}
+  firstName={firstName}
+/>
 
               <StatsSection />
 
