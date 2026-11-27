@@ -992,6 +992,7 @@
 
  @media (max-width: 760px) {
   .student-dashboard .dashboard-sidebar {
+    
     width: 270px;
     min-width: 270px;
     position: fixed;
@@ -1013,6 +1014,17 @@
 
     transition: left 0.3s ease;
   }
+    .student-dashboard .sidebar-brand,
+  .student-dashboard .sidebar-label,
+  .student-dashboard .sidebar-navigation,
+  .student-dashboard .sidebar-bottom {
+    flex-shrink: 0;
+  }
+  .student-dashboard .dashboard-main {
+  margin-left: 0;
+  width: 100%;
+  min-width: 0;
+}
   .student-dashboard .dashboard-sidebar.sidebar-open {
     left: 0;
   }
