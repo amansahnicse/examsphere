@@ -990,23 +990,29 @@
   }
 }
 
-@media (max-width: 760px) {
- .student-dashboard .dashboard-sidebar {
-  width: 270px;
-  min-width: 270px;
-  position: fixed;
-  left: -280px;
-  top: 0;
-  height: 100vh;
-  height: 100dvh;
-  max-height: 100dvh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  transition: left 0.3s ease;
-}
+ @media (max-width: 760px) {
+  .student-dashboard .dashboard-sidebar {
+    width: 270px;
+    min-width: 270px;
+    position: fixed;
+    left: -280px;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
 
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+
+    transition: left 0.3s ease;
+  }
   .student-dashboard .dashboard-sidebar.sidebar-open {
     left: 0;
   }
